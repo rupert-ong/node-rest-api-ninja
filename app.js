@@ -11,9 +11,9 @@ app.use(morgan('dev'));
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Header', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  if(req.method === 'OPTIONS'){
+  if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, PATCH, GET, DELETE');
-    res.status(200).json({});
+    return res.status(200).json({});
   }
   next();
 });

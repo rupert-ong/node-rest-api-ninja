@@ -1,0 +1,26 @@
+{
+  "name": "node-rest-api-ninja",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rupert-ong/node-rest-api-ninja.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rupert-ong/node-rest-api-ninja/issues"
+  },
+  "homepage": "https://github.com/rupert-ong/node-rest-api-ninja#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.12"
+  }
+}

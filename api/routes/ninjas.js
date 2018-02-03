@@ -9,7 +9,11 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   res.status(201).json({
-    type: 'POST'
+    type: 'POST',
+    ninja: {
+      name: req.body.name,
+      rank: req.body.rank
+    }
   });
 });
 

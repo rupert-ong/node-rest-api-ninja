@@ -1,11 +1,15 @@
 const express = require('express');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
+
 const app = express();
 
 const ninjaRoutes = require('./api/routes/ninjas');
 
 // Middleware
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Set headers to prevent CORS errors
 app.use((req, res, next) => {

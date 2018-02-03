@@ -1,8 +1,13 @@
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
 
 const ninjaRoutes = require('./api/routes/ninjas');
 
+// Middleware
+app.use(morgan('dev'));
+
+// Routes
 app.use('/api/ninjas', ninjaRoutes);
 
 // 404 Error

@@ -1,8 +1,13 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_DB_CONNECTION);
+mongoose.Promise = global.Promise;
 
 const ninjaRoutes = require('./api/routes/ninjas');
 

@@ -20,7 +20,7 @@ const GeoSchema = new Schema({
     // globe when mapping between 2 points (as opposed to 2d)
     index: "2dsphere"
   }
-})
+});
 
 const NinjaSchema = new Schema({
   name: {

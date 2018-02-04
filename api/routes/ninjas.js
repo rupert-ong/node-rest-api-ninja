@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000;
 router.get('/', (req, res, next) => {
   // Sample code to get all ninjas
   // Ninja.find({}).exec().then(result => res.status(200).json(result));
+  const maxDistanceThreshold = 100000; // in metres
 
   if (isNaN(parseFloat(req.query.lng)) || isNaN(parseFloat(req.query.lat))) {
     const err = new Error('Request query parameters lng and lat are required and must be numerical');
@@ -16,14 +17,15 @@ router.get('/', (req, res, next) => {
   Ninja.aggregate().near({
     near: { type: "Point", coordinates: [parseFloat(req.query.lng), parseFloat(req.query.lat)] },
     distanceField: 'dist.calculated',
-    maxDistance: 100000,
+    maxDistance: maxDistanceThreshold,
     spherical: true
   }).exec()
     .then(result => {
       res.status(200).json({
         message: 'Ninjas found near coordinates',
+        maxDistance: maxDistanceThreshold,
         longitude: req.query.lng,
-        latitute: req.query.lat,
+        latitude: req.query.lat,
         count: result.length,
         ninjas: result
       });

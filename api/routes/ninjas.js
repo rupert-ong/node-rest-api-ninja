@@ -5,9 +5,29 @@ const Ninja = require('../models/ninja');
 const port = process.env.PORT || 3000;
 
 router.get('/', (req, res, next) => {
-  res.status(200).json({
-    type: 'GET'
-  });
+  // Sample code to get all ninjas
+  // Ninja.find({}).exec().then(result => res.status(200).json(result));
+
+  if (isNaN(parseFloat(req.query.lng)) || isNaN(parseFloat(req.query.lat))) {
+    const err = new Error('Request query parameters lng and lat are required and must be numerical');
+    err.status = 422;
+    return next(err);
+  }
+  Ninja.aggregate().near({
+    near: { type: "Point", coordinates: [parseFloat(req.query.lng), parseFloat(req.query.lat)] },
+    distanceField: 'dist.calculated',
+    maxDistance: 100000,
+    spherical: true
+  }).exec()
+    .then(result => {
+      res.status(200).json({
+        message: 'Ninjas found near coordinates',
+        longitude: req.query.lng,
+        latitute: req.query.lat,
+        count: result.length,
+        ninjas: result
+      });
+    }).catch(err => { next(err) });
 });
 
 router.post('/', (req, res, next) => {

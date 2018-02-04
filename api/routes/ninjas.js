@@ -39,9 +39,35 @@ router.put('/:id', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
-  res.status(200).json({
-    type: 'DELETE'
-  });
+  const id = req.params.id;
+  Ninja.findByIdAndRemove({ _id: id })
+    .exec()
+    .then(result => {
+      if (!result) {
+        const err = new Error('Ninja not found');
+        err.status = 404;
+        return next(err);
+      }
+      res.status(200).json({
+        message: 'Ninja deleted',
+        ninja: {
+          ...result._doc
+        },
+        request: {
+          type: 'POST',
+          description: 'Create a ninja',
+          url: `http://localhost/${port}/api/ninjas/`,
+          body: {
+            name: 'String',
+            rank: 'String',
+            available: 'Boolean'
+          }
+        }
+      });
+    })
+    .catch(err => {
+      next(err);
+    })
 });
 
 module.exports = router;

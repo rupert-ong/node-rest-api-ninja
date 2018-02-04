@@ -32,6 +32,23 @@ router.get('/', (req, res, next) => {
     }).catch(err => { next(err) });
 });
 
+router.get('/:id', (req, res, next) => {
+  Ninja.findById(req.params.id)
+    .select('_id name rank available geometry')
+    .exec()
+    .then(result => {
+      if (!result) {
+        const err = new Error('Ninja not found');
+        err.status = 404;
+        return next(err);
+      }
+      res.status(200).json({
+        ...result._doc
+      });
+    })
+    .catch(err => { next(err); });
+});
+
 router.post('/', (req, res, next) => {
   // Model.create is shorthand for new Model(req.body | {...}) and save()
   Ninja.create(req.body)
@@ -66,7 +83,7 @@ router.put('/:id', (req, res, next) => {
       }
       // Get updated ninja document
       Ninja.findById(id)
-        .select('_id name rank available')
+        .select('_id name rank available geometry')
         .exec()
         .then(result => {
           res.status(200).json({
@@ -87,7 +104,7 @@ router.put('/:id', (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
   Ninja.findByIdAndRemove({ _id: id })
-    .select('_id name rank available')
+    .select('_id name rank available geometry')
     .exec()
     .then(result => {
       if (!result) {

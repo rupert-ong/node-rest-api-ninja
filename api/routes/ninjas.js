@@ -33,14 +33,39 @@ router.post('/', (req, res, next) => {
 });
 
 router.put('/:id', (req, res, next) => {
-  res.status(200).json({
-    type: 'PUT'
-  });
+  const id = req.params.id;
+  Ninja.findByIdAndUpdate(id, req.body)
+    .exec()
+    .then(result => {
+      if (!result) {
+        const err = new Error('Ninja not found');
+        err.status = 404;
+        return next(err);
+      }
+      // Get updated ninja document
+      Ninja.findById(id)
+        .select('_id name rank available')
+        .exec()
+        .then(result => {
+          res.status(200).json({
+            message: 'Ninja updated',
+            ninja: {
+              ...result._doc
+            },
+            request: {
+              type: 'GET',
+              url: `http://localhost/${port}/api/ninjas/${result._id}`,
+            }
+          });
+        });
+    })
+    .catch(err => { next(err); });
 });
 
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
   Ninja.findByIdAndRemove({ _id: id })
+    .select('_id name rank available')
     .exec()
     .then(result => {
       if (!result) {
@@ -65,9 +90,7 @@ router.delete('/:id', (req, res, next) => {
         }
       });
     })
-    .catch(err => {
-      next(err);
-    })
+    .catch(err => { next(err); });
 });
 
 module.exports = router;
